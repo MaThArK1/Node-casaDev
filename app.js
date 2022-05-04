@@ -1,7 +1,10 @@
-//Requere o modulo express e o instancia.
-const express = require('express');
-const nodemon = require('nodemon');
+//Importa os módulos
+import express from 'express';
+import nodemon from 'nodemon';
 const app = express();
+import { Database } from './config/connection.js';
+
+const db = new Database();
 
 //Permite a aplicação a receber POST com JSON
 app.use(express.json());
