@@ -8,6 +8,18 @@ app.use(express.json());
 
 const contatos = ["Kaio", "Luisa", "Matheus"];
 
+//Midleware validando o nome
+function validaNome(req,res, next){
+    // Se não houver o nome na requisição, retorna erro.
+    if(!req.body.nome) {
+        return res.status(400).json({
+            "erro" : true,
+            "mensagem" : "o parâmetro nome não foi enviado!"
+        })
+    }
+    next();
+}
+
 //Cria a rota GET
 app.get('/', (req, res) =>{
     res.send("Olá Mundo! 5");
@@ -27,7 +39,7 @@ app.get('/contato', (req,res)=> {
 })
 
 //Cria a rota POST
-app.post('/contato', (req,res) =>{
+app.post('/contato', validaNome, (req,res) =>{
     //constante nome = o que estiver no BODY/JSON
     const { nome } = req.body;
 
@@ -47,6 +59,17 @@ app.put("/contato/:id", (req,res) =>{
 
     //Substitui o contato do ID pelo informado no JSON
     contatos[id] = nome;
+
+    return res.json(contatos);
+})
+
+//Cria a rota DELETE
+app.delete("/delete/:id", (req,res) =>{
+
+    const {id} = req.params;
+
+    //splice= retira o contato a partir da posição (id), e retira 1 contato.
+    contatos.splice(id, 1);
 
     return res.json(contatos);
 })
